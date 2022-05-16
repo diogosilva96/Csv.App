@@ -16,7 +16,7 @@ namespace Csv.App.Utility
                 {
                     var currentHeader = Headers[j];
                     var value = values[j];
-                    var splitHeader = currentHeader.Split('_');
+                    var splitHeader = currentHeader.Split(InnerChildSeparator);
                     if (splitHeader.Length > 1)
                     {
                         AddHeaderChildren(rowElement, splitHeader, value);
