@@ -6,11 +6,12 @@ namespace Csv.App.Utility
     {
         protected override string ConvertInternal(string[] dataSource)
         {
-            var root = new XElement("root");
-            foreach (var rowData in dataSource)
+            var root = new XElement("data");
+            for (var i = 0; i < dataSource.Length; i++)
             {
-                var values = rowData.Split(ValueSeparator);
-                var element = new XElement("element");
+                var values = dataSource[i].Split(ValueSeparator);
+                var rowElement = new XElement("row");
+                rowElement.Add(new XAttribute("number", i));
                 for (var j = 0; j < values.Length; j++)
                 {
                     var currentHeader = Headers[j];
@@ -18,13 +19,13 @@ namespace Csv.App.Utility
                     var splitHeader = currentHeader.Split('_');
                     if (splitHeader.Length > 1)
                     {
-                        AddHeaderChildren(element, splitHeader, value);
+                        AddHeaderChildren(rowElement, splitHeader, value);
                         continue;
                     }
-                    element.Add(new XElement(currentHeader, string.IsNullOrEmpty(value) ? null : value));
+                    rowElement.Add(new XElement(currentHeader, string.IsNullOrEmpty(value) ? null : value));
+                    
                 }
-
-                root.Add(element);
+                root.Add(rowElement);
             }
 
             return root.ToString();
