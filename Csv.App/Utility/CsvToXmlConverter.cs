@@ -1,22 +1,28 @@
 ﻿using System.Xml.Linq;
+using Csv.App.Models;
 
 namespace Csv.App.Utility
 {
     public class CsvToXmlConverter : CsvConverter
     {
-        protected override string ConvertInternal(string[] dataSource)
+
+        public CsvToXmlConverter(CsvConverterConfiguration? converterConfiguration = null) : base(converterConfiguration)
+        {
+            //in case we may want to override ConverterConfig
+        }
+        protected override string ConvertData(string[] dataSource)
         {
             var root = new XElement("data");
             for (var i = 0; i < dataSource.Length; i++)
             {
-                var values = dataSource[i].Split(ValueSeparator);
+                var values = dataSource[i].Split(ConverterConfiguration.Separator);
                 var rowElement = new XElement("row");
                 rowElement.Add(new XAttribute("number", i));
                 for (var j = 0; j < values.Length; j++)
                 {
                     var currentHeader = Headers[j];
                     var value = values[j];
-                    var splitHeader = currentHeader.Split(InnerChildSeparator);
+                    var splitHeader = currentHeader.Split(ConverterConfiguration.InnerChildSeparator);
                     if (splitHeader.Length > 1)
                     {
                         AddHeaderChildren(rowElement, splitHeader, value);
@@ -54,5 +60,6 @@ namespace Csv.App.Utility
 
             }
         }
+
     }
 }

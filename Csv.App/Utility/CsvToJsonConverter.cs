@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Csv.App.Models;
 
 namespace Csv.App.Utility
 {
@@ -14,40 +15,41 @@ namespace Csv.App.Utility
 
         public CsvToJsonConverter()
         {
+            //default serializer settings
             _serializerOptions = new JsonSerializerOptions()
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 WriteIndented = true
             };
         }
-        public CsvToJsonConverter(JsonSerializerOptions serializerOptions)
+        public CsvToJsonConverter(JsonSerializerOptions serializerOptions, CsvConverterConfiguration? converterConfiguration = null) : base(converterConfiguration)
         {
             // in case we may want to override serializer default behaviour
             _serializerOptions = serializerOptions; 
         }
-        protected override string ConvertInternal(string[] dataSource)
+        protected override string ConvertData(string[] dataSource)
         {
-            var keyValues = new List<Dictionary<string, object>>();
+            var dictionaryList = new List<Dictionary<string, object?>>();
             foreach (var rowData in dataSource)
             {
-                var values = rowData.Split();
-                var dictionary = new Dictionary<string, object?>();
+                var values = rowData.Split(ConverterConfiguration.Separator);
+                var currentObject = new Dictionary<string, object?>();
                 for (var j = 0; j < values.Length; j++)
                 {
                     var currentHeader = Headers[j];
                     var value = values[j];
-                    var splitHeader = currentHeader.Split(InnerChildSeparator);
+                    var splitHeader = currentHeader.Split(ConverterConfiguration.InnerChildSeparator);
                     if (splitHeader.Length > 1)
                     {
-                        AddHeaderChildren(dictionary, splitHeader, value);
+                        AddHeaderChildren(currentObject, splitHeader, value);
                         continue;
                     }
-                    dictionary.Add(currentHeader, string.IsNullOrEmpty(value) ? null : value);
+                    currentObject.Add(currentHeader, string.IsNullOrEmpty(value) ? null : value);
                 }
-                keyValues.Add(dictionary);
+                dictionaryList.Add(currentObject);
             }
 
-            return JsonSerializer.Serialize(keyValues, _serializerOptions);
+            return JsonSerializer.Serialize(dictionaryList, _serializerOptions);
         }
 
         protected void AddHeaderChildren(Dictionary<string,object?> root, string[] splitHeaders, string? value)
