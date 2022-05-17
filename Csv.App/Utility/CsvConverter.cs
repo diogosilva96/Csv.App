@@ -23,7 +23,7 @@ namespace Csv.App.Utility
             ConverterConfiguration = converterConfiguration;
         }
 
-        protected override string[] DoDataSourceProcessing(string fileData)
+        protected override string[] PreProcessDataSource(string fileData)
         {
             var data = fileData.Replace("\r", "").Split("\n");
             // process headers

@@ -26,12 +26,12 @@ namespace Csv.App.Utility
             return fileData;
         }
 
-        protected abstract TDataSource DoDataSourceProcessing(string fileData);
+        protected abstract TDataSource PreProcessDataSource(string fileData);
         public async Task<string> ConvertAsync(string sourceFilePath)
         {
             var fileData = await ValidateFileAndReadDataAsync(sourceFilePath);
 
-            var dataSource = DoDataSourceProcessing(fileData);
+            var dataSource = PreProcessDataSource(fileData);
             
             return ConvertData(dataSource);
         }

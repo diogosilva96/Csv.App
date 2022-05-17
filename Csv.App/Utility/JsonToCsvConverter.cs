@@ -17,7 +17,7 @@ public class JsonToCsvConverter : BaseConverter<string>
         ConverterConfiguration = converterConfiguration;
     }
 
-    protected override string DoDataSourceProcessing(string fileData)
+    protected override string PreProcessDataSource(string fileData)
     {
         return fileData;
     }
@@ -102,7 +102,7 @@ public class JsonToCsvConverter : BaseConverter<string>
 
         void findValueForPath(JsonObject currentObject, List<string> pathsToVisit)
         {
-            if (pathsToVisit.Count() <= 0 || !string.IsNullOrEmpty(foundValue)) return;
+            if (!pathsToVisit.Any() || !string.IsNullOrEmpty(foundValue)) return;
             var currentPath = pathsToVisit[0];
             for (var i = 0; i < pathsToVisit.Count; i++)
             {
