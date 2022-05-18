@@ -4,9 +4,10 @@ using Csv.App.Models;
 
 namespace Csv.App.Utility;
 
-public class JsonToCsvConverter : BaseConverter<string>
+public class JsonToCsvConverter : BaseConverter<JsonArray?>
 {
     protected readonly CsvConverterConfiguration ConverterConfiguration;
+    private HashSet<string> _headers;
     public JsonToCsvConverter(CsvConverterConfiguration? converterConfiguration = null)
     {
         if (converterConfiguration is null)
@@ -17,16 +18,10 @@ public class JsonToCsvConverter : BaseConverter<string>
         ConverterConfiguration = converterConfiguration;
     }
 
-    protected override string PreProcessDataSource(string fileData)
+    protected override JsonArray? PreProcessDataSource(string fileData)
     {
-        return fileData;
-    }
-
-    protected override string ConvertData(string dataSource)
-    {
-        var jsonData = JsonNode.Parse(dataSource)?.AsArray();
-
-        var propertyNames = new List<string>();
+        _headers = new HashSet<string>();
+        var jsonData = JsonNode.Parse(fileData)?.AsArray();
         //get all json property names
         foreach (var node in jsonData)
         {
@@ -37,11 +32,7 @@ public class JsonToCsvConverter : BaseConverter<string>
                 {
                     case JsonObject obj:
                         var childPropertyNames = GetChildPropertyNames(obj, keyValue.Key);
-                        if (childPropertyNames.All(cp =>
-                                                       propertyNames.All(p =>
-                                                                             p.Equals(cp,
-                                                                                 StringComparison
-                                                                                     .InvariantCultureIgnoreCase))))
+                        if (childPropertyNames.All(cp => _headers.All(p => p.Equals(cp, StringComparison.InvariantCultureIgnoreCase))))
                             break;
                         foreach (var propName in childPropertyNames) appendPropertyNameIfNotExists(propName);
                         break;
@@ -51,51 +42,58 @@ public class JsonToCsvConverter : BaseConverter<string>
                 }
         }
 
-        var stringBuilder = new StringBuilder();
+        return jsonData;
+
+        void appendPropertyNameIfNotExists(string propertyName)
+        {
+            if (_headers.Any(p => p.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase))) return;
+            _headers.Add(propertyName);
+        }
+    }
+    
+    protected override string ConvertData(JsonArray? jsonData)
+    {
+        if (!_headers.Any())
+        {
+            return string.Empty;
+        }
+        var builder = new StringBuilder();
+        var initializedRow = false;
         //append headers
-        stringBuilder.AppendLine(string.Join(",", propertyNames));
+        builder.AppendLine(string.Join(ConverterConfiguration.Separator, _headers));
         // build actual row data
         foreach (var node in jsonData)
         {
             var currentRow = string.Empty;
-            var alreadyInitialized = false;
-            foreach (var property in propertyNames)
+            initializedRow = false;
+            foreach (var property in _headers)
             {
                 // this means property has no children
-                if (!property.Contains('_'))
+                if (!property.Contains(ConverterConfiguration.InnerChildSeparator))
                 {
                     var jNode = node.AsObject().FirstOrDefault(n => n.Key == property);
                     if (jNode.Key is null) continue;
-                    currentRow += getPropertyValueStr(jNode.Value.ToString(), alreadyInitialized);
-                    alreadyInitialized = true;
+                    currentRow += getPropertyValue(jNode.Value.ToString());
+                    initializedRow = true;
                     continue;
                 }
 
                 var value = FindPropertyValueInChildren(node.AsObject(), property);
-                currentRow += getPropertyValueStr(value, alreadyInitialized);
-                alreadyInitialized = true;
+                currentRow += getPropertyValue(value);
+                initializedRow = true;
             }
 
-            stringBuilder.AppendLine(currentRow);
+            builder.AppendLine(currentRow);
         }
 
-        return stringBuilder.ToString();
+        return builder.ToString();
 
-        string getPropertyValueStr(string? propertyValue, bool alreadyInitialized)
-        {
-            return !alreadyInitialized ? $"{propertyValue}" : $",{propertyValue}";
-        }
-
-        void appendPropertyNameIfNotExists(string propertyName)
-        {
-            if (propertyNames.Any(p => p.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase))) return;
-            propertyNames.Add(propertyName);
-        }
+        string getPropertyValue(string? propertyValue) =>!initializedRow ? $"{propertyValue}" : $"{ConverterConfiguration.Separator}{propertyValue}";
     }
 
     public string? FindPropertyValueInChildren(JsonObject rootObject, string propertyPath)
     {
-        var paths = propertyPath.Split("_").ToList();
+        var paths = propertyPath.Split(ConverterConfiguration.InnerChildSeparator).ToList();
         string? foundValue = null;
         findValueForPath(rootObject, paths);
         return foundValue;
@@ -136,15 +134,16 @@ public class JsonToCsvConverter : BaseConverter<string>
                 {
                     case JsonValue:
                     {
-                        var propertyName = $"{currentStr}_{node.Key}";
+                        var propertyName = $"{currentStr}{ConverterConfiguration.InnerChildSeparator}{node.Key}";
+                        currentStr = baseName;
                         if (propertiesFound.Any(p => p.Equals(propertyName))) continue;
                         propertiesFound.Add(propertyName);
-                        currentStr = baseName;
+                        
                         break;
                     }
                     case JsonObject obj:
                     {
-                        if (!string.IsNullOrEmpty(currentStr)) currentStr += "_";
+                        if (!string.IsNullOrEmpty(currentStr)) currentStr += ConverterConfiguration.InnerChildSeparator;
                         currentStr += node.Key;
 
                         buildPropertyNames(obj, currentStr);

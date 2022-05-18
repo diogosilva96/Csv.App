@@ -9,13 +9,14 @@ var sourceCsvFile = $"{baseInputFilePath}\\TestCsv.csv";
 var destinationJsonFile = $"{baseOutputFilePath}\\TestJson.json";
 
 var destinationCsvFile = $"{baseOutputFilePath}\\TestCsv.csv";
+var destinationXmlFile = $"{baseOutputFilePath}\\TestXml.xml";
 
 
 
-var csvToJsonConverter = new CsvToJsonConverter();
-var jsonResult = await csvToJsonConverter.ConvertAsync(sourceCsvFile);
-await csvToJsonConverter.ConvertAndWriteToFileAsync(sourceCsvFile, destinationJsonFile);
-Console.WriteLine(jsonResult);
+//var csvToJsonConverter = new CsvToJsonConverter();
+//var jsonResult = await csvToJsonConverter.ConvertAsync(sourceCsvFile);
+//await csvToJsonConverter.ConvertAndWriteToFileAsync(sourceCsvFile, destinationJsonFile);
+//Console.WriteLine(jsonResult);
 
 var jsonToCsvConverter = new JsonToCsvConverter();
 var csvResult = await jsonToCsvConverter.ConvertAsync(destinationJsonFile);
@@ -25,7 +26,13 @@ Console.Write(csvResult);
 
 
 
-var csvToXmlConverter = new CsvToXmlConverter();
-var xmlResult = await csvToXmlConverter.ConvertAsync(sourceCsvFile);
-Console.Write(xmlResult);
+//var csvToXmlConverter = new CsvToXmlConverter();
+//var xmlResult = await csvToXmlConverter.ConvertAsync(sourceCsvFile);
+//await csvToXmlConverter.ConvertAndWriteToFileAsync(sourceCsvFile, destinationXmlFile);
+//Console.Write(xmlResult);
+
+var xmlToCsvConverter = new XmlToCsvConverter();
+var xmlToCsvConverterResult = await xmlToCsvConverter.ConvertAsync(destinationXmlFile);
+await xmlToCsvConverter.ConvertAndWriteToFileAsync(destinationXmlFile,destinationCsvFile);
+Console.WriteLine(xmlToCsvConverterResult);
 Console.Read();

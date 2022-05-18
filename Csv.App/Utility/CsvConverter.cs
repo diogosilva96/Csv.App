@@ -25,6 +25,7 @@ namespace Csv.App.Utility
 
         protected override string[] PreProcessDataSource(string fileData)
         {
+            //get data as string array (per line)
             var data = fileData.Replace("\r", "").Split("\n");
             // process headers
             Headers = data[0].Split(ConverterConfiguration.Separator);
