@@ -18,6 +18,10 @@ var destinationXmlFile = $"{baseOutputFilePath}\\TestXml.xml";
 //await csvToJsonConverter.ConvertAndWriteToFileAsync(sourceCsvFile, destinationJsonFile);
 //Console.WriteLine(jsonResult);
 
+var xmlToJsonConverter = new XmlToJsonConverter();
+var xmlToJsonResult = await xmlToJsonConverter.ConvertAsync(destinationXmlFile);
+Console.WriteLine(xmlToJsonResult);
+
 var jsonToCsvConverter = new JsonToCsvConverter();
 var csvResult = await jsonToCsvConverter.ConvertAsync(destinationJsonFile);
 await jsonToCsvConverter.ConvertAndWriteToFileAsync(destinationJsonFile, destinationCsvFile);

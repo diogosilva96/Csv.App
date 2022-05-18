@@ -57,7 +57,7 @@ public class JsonToCsvConverter : BaseConverter<JsonArray?>
         {
             return string.Empty;
         }
-        var builder = new StringBuilder();
+        StringBuilder builder = new ();
         var initializedRow = false;
         //append headers
         builder.AppendLine(string.Join(ConverterConfiguration.Separator, _headers));
@@ -91,7 +91,7 @@ public class JsonToCsvConverter : BaseConverter<JsonArray?>
         string getPropertyValue(string? propertyValue) =>!initializedRow ? $"{propertyValue}" : $"{ConverterConfiguration.Separator}{propertyValue}";
     }
 
-    public string? FindPropertyValueInChildren(JsonObject rootObject, string propertyPath)
+    private string? FindPropertyValueInChildren(JsonObject rootObject, string propertyPath)
     {
         var paths = propertyPath.Split(ConverterConfiguration.InnerChildSeparator).ToList();
         string? foundValue = null;
@@ -119,7 +119,7 @@ public class JsonToCsvConverter : BaseConverter<JsonArray?>
         }
     }
 
-    public string[] GetChildPropertyNames(JsonObject rootObject, string baseName)
+    private string[] GetChildPropertyNames(JsonObject rootObject, string baseName)
     {
         var propertiesFound = new HashSet<string>();
         buildPropertyNames(rootObject);

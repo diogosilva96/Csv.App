@@ -13,20 +13,20 @@ namespace Csv.App.Utility
     {
         private readonly JsonSerializerOptions _serializerOptions;
 
-        public CsvToJsonConverter()
+        public CsvToJsonConverter(JsonSerializerOptions? serializerOptions = null, CsvConverterConfiguration? converterConfiguration = null) : base(converterConfiguration)
         {
-            //default serializer settings
-            _serializerOptions = new JsonSerializerOptions()
+            if (serializerOptions is null)
             {
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                WriteIndented = true
-            };
-        }
-        public CsvToJsonConverter(JsonSerializerOptions serializerOptions, CsvConverterConfiguration? converterConfiguration = null) : base(converterConfiguration)
-        {
-            // in case we may want to override serializer default behaviour
+                _serializerOptions = new JsonSerializerOptions()
+                {
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                    WriteIndented = true
+                };
+                return;
+            }
             _serializerOptions = serializerOptions; 
         }
+
         protected override string ConvertData(string[] dataSource)
         {
             var dictionaryList = new List<Dictionary<string, object?>>();

@@ -48,7 +48,7 @@ namespace Csv.App.Utility
                 _headers.Add(propertyName);
             }
         }
-        public string[] FindPropertyNamesForElement(XElement? rootElement)
+        private string[] FindPropertyNamesForElement(XElement? rootElement)
         {
             if (!rootElement.HasElements)
             {
@@ -83,7 +83,7 @@ namespace Csv.App.Utility
             {
                 return string.Empty;
             }
-            var builder = new StringBuilder();
+            StringBuilder builder = new ();
             builder.AppendLine(string.Join(ConverterConfiguration.Separator, _headers));
             bool alreadyInitialized;
             foreach (var rowElement in rowData)
