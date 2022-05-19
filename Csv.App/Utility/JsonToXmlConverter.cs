@@ -38,7 +38,7 @@ namespace Csv.App.Utility
                             propertyPath = BuildChildPropertyValues(jsonObject);
                             break;
                         default:
-                            propertyPath = new (keyValue.Key,keyValue.Value.ToString());
+                            propertyPath = new (keyValue.Key,keyValue.Value?.ToString() ?? string.Empty);
                             break;
                     }
                     row.Add(propertyPath);

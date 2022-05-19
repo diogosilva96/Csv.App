@@ -73,7 +73,7 @@ public class JsonToCsvConverter : BaseConverter<JsonArray?>
                 {
                     var jNode = node.AsObject().FirstOrDefault(n => n.Key == property);
                     if (jNode.Key is null) continue;
-                    currentRow += getPropertyValue(jNode.Value.ToString());
+                    currentRow += getPropertyValue(jNode.Value?.ToString() ?? string.Empty);
                     initializedRow = true;
                     continue;
                 }
