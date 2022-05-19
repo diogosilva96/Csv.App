@@ -149,7 +149,7 @@ async Task runTests()
                     break;
                 case JsonToXmlConverter:
                     sourcePath = $"{testDirectory}\\{nameof(CsvToJsonConverter)}.json";
-                    targetPath = $"{testDirectory}\\{converter.GetType().Name}.json";
+                    targetPath = $"{testDirectory}\\{converter.GetType().Name}.xml";
                     break;
                 default:
                     throw new ArgumentException($"Invalid implementation type {converter.GetType().Name} for {nameof(IConverter)} interface.");
