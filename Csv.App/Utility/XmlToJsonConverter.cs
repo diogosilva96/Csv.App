@@ -8,11 +8,11 @@ public class XmlToJsonConverter : BaseConverter<IEnumerable<XElement?>>
 {
     private readonly JsonSerializerOptions _serializerOptions;
 
-    public XmlToJsonConverter(JsonSerializerOptions? serializerOptions = null)
+    public XmlToJsonConverter(JsonSerializerOptions? serializerOptions = null) : base(new(@"^.*\.([Xx][Mm][Ll])$"))
     {
         if (serializerOptions is null)
         {
-            _serializerOptions = new JsonSerializerOptions
+            _serializerOptions = new()
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 WriteIndented = true

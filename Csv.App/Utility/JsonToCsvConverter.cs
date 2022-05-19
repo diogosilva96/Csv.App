@@ -8,11 +8,11 @@ public class JsonToCsvConverter : BaseConverter<JsonArray?>
 {
     protected readonly CsvConverterConfiguration ConverterConfiguration;
     private HashSet<string> _headers;
-    public JsonToCsvConverter(CsvConverterConfiguration? converterConfiguration = null)
+    public JsonToCsvConverter(CsvConverterConfiguration? converterConfiguration = null) : base(new(@"^.*\.([Jj][Ss][Oo][Nn])$"))
     {
         if (converterConfiguration is null)
         {
-            ConverterConfiguration = new CsvConverterConfiguration();
+            ConverterConfiguration = new ();
             return;
         }
         ConverterConfiguration = converterConfiguration;
@@ -20,7 +20,7 @@ public class JsonToCsvConverter : BaseConverter<JsonArray?>
 
     protected override JsonArray? PreProcessDataSource(string fileData)
     {
-        _headers = new HashSet<string>();
+        _headers = new ();
         var jsonData = JsonNode.Parse(fileData)?.AsArray();
         //get all json property names
         foreach (var node in jsonData)

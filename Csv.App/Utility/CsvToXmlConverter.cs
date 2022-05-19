@@ -12,11 +12,11 @@ namespace Csv.App.Utility
         }
         protected override string ConvertData(string[] dataSource)
         {
-            var root = new XElement("data");
+            XElement root = new ("data");
             for (var i = 0; i < dataSource.Length; i++)
             {
                 var values = dataSource[i].Split(ConverterConfiguration.Separator);
-                var rowElement = new XElement("row");
+                XElement rowElement = new ("row");
                 rowElement.Add(new XAttribute("number", i));
                 for (var j = 0; j < values.Length; j++)
                 {
@@ -54,7 +54,7 @@ namespace Csv.App.Utility
                     currentRoot = currentRoot.Elements().First(e => e.Name == header);
                     continue;
                 }
-                var elementData = new XElement(header);
+                XElement elementData = new (header);
                 currentRoot.Add(elementData);
                 currentRoot = elementData;
 

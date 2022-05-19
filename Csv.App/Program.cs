@@ -13,30 +13,34 @@ var destinationXmlFile = $"{baseOutputFilePath}\\TestXml.xml";
 
 
 
-//var csvToJsonConverter = new CsvToJsonConverter();
-//var jsonResult = await csvToJsonConverter.ConvertAsync(sourceCsvFile);
+//IFileConverter csvToJsonConverter = new CsvToJsonConverter();
+//var jsonResult = await csvToJsonConverter.ConvertFromFileAsync(sourceCsvFile);
 //await csvToJsonConverter.ConvertAndWriteToFileAsync(sourceCsvFile, destinationJsonFile);
 //Console.WriteLine(jsonResult);
 
-var xmlToJsonConverter = new XmlToJsonConverter();
-var xmlToJsonResult = await xmlToJsonConverter.ConvertAsync(destinationXmlFile);
+IFileConverter jsonToXmlConverter = new JsonToXmlConverter();
+var jsonToXmlResult = await jsonToXmlConverter.ConvertFromFileAsync(destinationJsonFile);
+Console.Write(jsonToXmlResult);
+
+IFileConverter xmlToJsonConverter = new XmlToJsonConverter();
+var xmlToJsonResult = await xmlToJsonConverter.ConvertFromFileAsync(destinationXmlFile);
 Console.WriteLine(xmlToJsonResult);
 
-var jsonToCsvConverter = new JsonToCsvConverter();
-var csvResult = await jsonToCsvConverter.ConvertAsync(destinationJsonFile);
+IFileConverter jsonToCsvConverter = new JsonToCsvConverter();
+var csvResult = await jsonToCsvConverter.ConvertFromFileAsync(destinationJsonFile);
 await jsonToCsvConverter.ConvertAndWriteToFileAsync(destinationJsonFile, destinationCsvFile);
 Console.Write(csvResult);
 
 
 
 
-//var csvToXmlConverter = new CsvToXmlConverter();
-//var xmlResult = await csvToXmlConverter.ConvertAsync(sourceCsvFile);
+//IFileConverter csvToXmlConverter = new CsvToXmlConverter();
+//var xmlResult = await csvToXmlConverter.ConvertFromFileAsync(sourceCsvFile);
 //await csvToXmlConverter.ConvertAndWriteToFileAsync(sourceCsvFile, destinationXmlFile);
 //Console.Write(xmlResult);
 
-var xmlToCsvConverter = new XmlToCsvConverter();
-var xmlToCsvConverterResult = await xmlToCsvConverter.ConvertAsync(destinationXmlFile);
+IFileConverter xmlToCsvConverter = new XmlToCsvConverter();
+var xmlToCsvConverterResult = await xmlToCsvConverter.ConvertFromFileAsync(destinationXmlFile);
 await xmlToCsvConverter.ConvertAndWriteToFileAsync(destinationXmlFile,destinationCsvFile);
 Console.WriteLine(xmlToCsvConverterResult);
 Console.Read();

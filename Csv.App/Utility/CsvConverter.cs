@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Csv.App.Models;
 
@@ -13,11 +14,11 @@ namespace Csv.App.Utility
         protected readonly CsvConverterConfiguration ConverterConfiguration;
         protected string[] Headers;
 
-        protected CsvConverter(CsvConverterConfiguration? converterConfiguration = null)
+        protected CsvConverter(CsvConverterConfiguration? converterConfiguration = null) : base(new (@"^.*\.([Cc][Ss][Vv])$"))
         {
             if (converterConfiguration is null)
             {
-                ConverterConfiguration = new CsvConverterConfiguration();
+                ConverterConfiguration = new ();
                 return;
             }
             ConverterConfiguration = converterConfiguration;

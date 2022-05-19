@@ -13,18 +13,18 @@ namespace Csv.App.Utility
     {
         private HashSet<string> _headers;
         protected CsvConverterConfiguration ConverterConfiguration;
-        public XmlToCsvConverter(CsvConverterConfiguration? converterConfiguration = null)
+        public XmlToCsvConverter(CsvConverterConfiguration? converterConfiguration = null) : base(new(@"^.*\.([Xx][Mm][Ll])$"))
         {
             if (converterConfiguration is null)
             {
-                ConverterConfiguration = new CsvConverterConfiguration();
+                ConverterConfiguration = new ();
                 return;
             }
             ConverterConfiguration = converterConfiguration;
         }
         protected override IEnumerable<XElement?> PreProcessDataSource(string fileData)
         {
-            _headers = new HashSet<string>();
+            _headers = new ();
             var rootElement = XElement.Parse(fileData);
             foreach (var element in rootElement.Elements())
             {
@@ -54,7 +54,7 @@ namespace Csv.App.Utility
             {
                 return new []{ rootElement.Name.ToString()};
             }
-            var propertiesFound = new HashSet<string>();
+            HashSet<string> propertiesFound = new ();
             buildPropertyNames(rootElement);
             return propertiesFound.ToArray();
 

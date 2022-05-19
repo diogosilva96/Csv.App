@@ -29,11 +29,11 @@ namespace Csv.App.Utility
 
         protected override string ConvertData(string[] dataSource)
         {
-            var dictionaryList = new List<Dictionary<string, object?>>();
+            List<Dictionary<string, object?>> dictionaryList = new ();
             foreach (var rowData in dataSource)
             {
                 var values = rowData.Split(ConverterConfiguration.Separator);
-                var currentObject = new Dictionary<string, object?>();
+                Dictionary<string, object?> currentObject = new ();
                 for (var j = 0; j < values.Length; j++)
                 {
                     var currentHeader = Headers[j];
@@ -68,7 +68,7 @@ namespace Csv.App.Utility
                     currentRoot = (Dictionary<string, object?>)currentRoot[header];
                     continue;
                 }
-                var headerData = new Dictionary<string, object?>();
+                Dictionary<string, object?> headerData = new ();
                 currentRoot.Add(splitHeaders[i], headerData);
                 currentRoot = headerData;
 
