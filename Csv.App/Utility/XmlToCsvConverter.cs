@@ -11,7 +11,7 @@ namespace Csv.App.Utility
 {
     public class XmlToCsvConverter : BaseConverter<IEnumerable<XElement?>>
     {
-        private HashSet<string> _headers;
+        private HashSet<string>? _headers;
         protected CsvConverterConfiguration ConverterConfiguration;
         public XmlToCsvConverter(CsvConverterConfiguration? converterConfiguration = null) : base(new(@"^.*\.([Xx][Mm][Ll])$"))
         {
@@ -48,7 +48,7 @@ namespace Csv.App.Utility
                 _headers.Add(propertyName);
             }
         }
-        private string[] FindPropertyNamesForElement(XElement? rootElement)
+        private IEnumerable<string> FindPropertyNamesForElement(XElement? rootElement)
         {
             if (!rootElement.HasElements)
             {
@@ -79,7 +79,7 @@ namespace Csv.App.Utility
         }
         protected override string ConvertData(IEnumerable<XElement?> rowData)
         {
-            if (!_headers.Any())
+            if (_headers is null || !_headers.Any())
             {
                 return string.Empty;
             }

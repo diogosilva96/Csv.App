@@ -29,18 +29,13 @@ namespace Csv.App.Utility
             {
                 XElement row = new ("row");
                 row.Add(new XAttribute("number",index++));
-                foreach (var keyValue in node.AsObject())
+                foreach (var (key, value) in node?.AsObject())
                 {
-                    XElement propertyPath;
-                    switch (keyValue.Value)
-                    {
-                        case JsonObject jsonObject:
-                            propertyPath = BuildChildPropertyValues(jsonObject);
-                            break;
-                        default:
-                            propertyPath = new (keyValue.Key,keyValue.Value?.ToString() ?? string.Empty);
-                            break;
-                    }
+                    var propertyPath = value switch
+                                            {
+                                                JsonObject jsonObject => BuildChildPropertyValues(jsonObject),
+                                                _ => new(key, value?.ToString() ?? string.Empty)
+                                            };
                     row.Add(propertyPath);
                 }
                 root.Add(row);

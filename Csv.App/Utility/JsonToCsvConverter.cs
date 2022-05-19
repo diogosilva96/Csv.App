@@ -71,9 +71,8 @@ public class JsonToCsvConverter : BaseConverter<JsonArray?>
                 // this means property has no children
                 if (!property.Contains(ConverterConfiguration.InnerChildSeparator))
                 {
-                    var jNode = node.AsObject().FirstOrDefault(n => n.Key == property);
-                    if (jNode.Key is null) continue;
-                    currentRow += getPropertyValue(jNode.Value?.ToString() ?? string.Empty);
+                    var jNode = node?.AsObject().FirstOrDefault(n => n.Key == property);
+                    currentRow += getPropertyValue(jNode?.Value?.ToString() ?? string.Empty);
                     initializedRow = true;
                     continue;
                 }
