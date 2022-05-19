@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Csv.App.Utility
 {
-    public abstract class BaseConverter<TDataSource> : IFileConverter
+    public abstract class BaseConverter<TDataSource> : IConverter
     {
         protected Regex? InputFilePathRegex;
 

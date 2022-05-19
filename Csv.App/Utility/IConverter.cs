@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Csv.App.Utility
 {
-    public interface IFileConverter
+    public interface IConverter
     {
         public Task ConvertAndWriteToFileAsync(string sourceFilePath, string destinationFilePath);
         public Task<string> ConvertFromFileAsync(string sourceFilePath);
