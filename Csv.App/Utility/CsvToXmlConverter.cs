@@ -15,6 +15,10 @@ namespace Csv.App.Utility
             XElement root = new ("data");
             for (var i = 0; i < dataSource.Length; i++)
             {
+                if (string.IsNullOrEmpty(dataSource[i]))
+                {
+                    continue;
+                }
                 var values = dataSource[i].Split(ConverterConfiguration.Separator);
                 XElement rowElement = new ("row");
                 rowElement.Add(new XAttribute("number", i));

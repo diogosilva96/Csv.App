@@ -32,6 +32,10 @@ namespace Csv.App.Utility
             List<Dictionary<string, object?>> dictionaryList = new ();
             foreach (var rowData in dataSource)
             {
+                if (string.IsNullOrEmpty(rowData))
+                {
+                    continue;
+                }
                 var values = rowData.Split(ConverterConfiguration.Separator);
                 Dictionary<string, object?> currentObject = new ();
                 for (var j = 0; j < values.Length; j++)
